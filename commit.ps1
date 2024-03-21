@@ -20,27 +20,29 @@ Function Show-Menu {
     for ($i = 0; $i -lt $Options.Length; $i++) {
         Write-Host "$($i+1). $($Options[$i])"
     }
-    $choice = Read-Host "Enter your choice"
-    return $choice
 }
 
-# Display interactive menu for commit type
-$commitTypeMenu = Show-Menu -Title 'Select commit type' -Options @("Changes", "Fixes", "Other")
-
-# Process user choice for commit type
-switch ($commitTypeMenu) {
-    1 {
-        $commit_type_prefix = "changes/"
+# Process user input to navigate through the menu
+$selectedOption = 0
+Show-Menu -Options @("Changes", "Fixes", "Other")
+while ($true) {
+    $key = $host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown').VirtualKeyCode
+    if ($key -eq 13) { # Enter key
         break
     }
-    2 {
-        $commit_type_prefix = "fixes/"
-        break
+    elseif ($key -eq 38) { # Up arrow
+        $selectedOption = [Math]::Max(0, $selectedOption - 1)
+        Write-Host ([char]27) "[1A" # Move cursor up
     }
-    Default {
-        $commit_type_prefix = ""
-        break
+    elseif ($key -eq 40) { # Down arrow
+        $selectedOption = [Math]::Min(($Options.Length - 1), $selectedOption + 1)
+        Write-Host ([char]27) "[1B" # Move cursor down
     }
+}
+$commit_type_prefix = switch ($selectedOption) {
+    0 {"changes/"; break}
+    1 {"fixes/"; break}
+    Default {""; break}
 }
 
 # Prompt for new branch name
