@@ -9,15 +9,26 @@ $commit_message = Read-Host -Prompt "Enter the commit message"
 
 git commit -m $commit_message
 
-# Select commit type
-Write-Host "Select commit type:"
-Write-Host "1. Changes"
-Write-Host "2. Fixes"
-Write-Host "3. Other"
+# Define function to display interactive menu
+Function Show-Menu {
+    param (
+        [string]$Title = 'Select commit type',
+        [string[]]$Options
+    )
+    Clear-Host
+    Write-Host "================ $Title ================"
+    for ($i = 0; $i -lt $Options.Length; $i++) {
+        Write-Host "$($i+1). $($Options[$i])"
+    }
+    $choice = Read-Host "Enter your choice"
+    return $choice
+}
 
-$commit_type = Read-Host "Enter your choice"
+# Display interactive menu for commit type
+$commitTypeMenu = Show-Menu -Title 'Select commit type' -Options @("Changes", "Fixes", "Other")
 
-switch ($commit_type) {
+# Process user choice for commit type
+switch ($commitTypeMenu) {
     1 {
         $commit_type_prefix = "changes/"
         break
@@ -26,12 +37,7 @@ switch ($commit_type) {
         $commit_type_prefix = "fixes/"
         break
     }
-    3 {
-        $commit_type_prefix = ""
-        break
-    }
     Default {
-        Write-Host "Invalid choice. Proceeding with 'other'."
         $commit_type_prefix = ""
         break
     }
