@@ -1,0 +1,17 @@
+{
+    "semi": true,
+    "tabWidth": 4,
+    "printWidth": 100,
+    "singleQuote": true,
+    "trailingComma": "none",
+    "jsxBracketSameLine": false,
+    "overrides": [
+        {
+            "files": "*.astro",
+            "options": {
+                "parser": "html",
+                "tabWidth": 4
+            }
+        }
+    ]
+}
